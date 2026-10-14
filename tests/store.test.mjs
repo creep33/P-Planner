@@ -88,6 +88,13 @@ test('compact folds old months so the item stays under the per-item quota', () =
   assert.ok(Object.keys(out).some((k) => k.length === 7));
 });
 
+test('projects are listed newest first', async () => {
+  data['p:old'] = { id: 'old', name: 'Old', createdAt: 1, runningSince: null };
+  data['p:mid'] = { id: 'mid', name: 'Mid', createdAt: 2, runningSince: null };
+  data['p:new'] = { id: 'new', name: 'New', createdAt: 3, runningSince: null };
+  assert.deepEqual((await store.loadAll()).map((p) => p.name), ['New', 'Mid', 'Old']);
+});
+
 test('rename and delete', async () => {
   const p = await store.createProject('Viejo');
   await store.addManual(p.id, H, '2026-10-14');

@@ -29,13 +29,13 @@ const MOCK = `
 const H = 3600000, M = 60000, DAY = 86400000, now = Date.now();
 const dk = (t) => { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 let data = {
-  'p:a1': { id: 'a1', name: 'Website redesign', createdAt: 1, runningSince: now - (1 * H + 12 * M) },
+  'p:a1': { id: 'a1', name: 'Website redesign', createdAt: 4, runningSince: now - (1 * H + 12 * M) },
   'd:a1': { [dk(now)]: 2 * H, [dk(now - DAY)]: 6.5 * H, [dk(now - 2 * DAY)]: 4 * H, [dk(now - 3 * DAY)]: 5.25 * H, [dk(now - 6 * DAY)]: 3 * H },
-  'p:b2': { id: 'b2', name: 'Mobile app', createdAt: 2, runningSince: null },
+  'p:b2': { id: 'b2', name: 'Mobile app', createdAt: 3, runningSince: null },
   'd:b2': { [dk(now)]: 1.5 * H, [dk(now - DAY)]: 2 * H, [dk(now - 4 * DAY)]: 7 * H },
-  'p:c3': { id: 'c3', name: 'Client support', createdAt: 3, runningSince: now - 25 * M },
+  'p:c3': { id: 'c3', name: 'Client support', createdAt: 2, runningSince: now - 25 * M },
   'd:c3': { [dk(now)]: 0.75 * H, [dk(now - 2 * DAY)]: 3 * H },
-  'p:d4': { id: 'd4', name: 'Research', createdAt: 4, runningSince: null },
+  'p:d4': { id: 'd4', name: 'Research', createdAt: 1, runningSince: null },
   'd:d4': { [dk(now - 3 * DAY)]: 2 * H },
 };
 const listeners = [];

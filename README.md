@@ -7,6 +7,10 @@
 <p align="center">Track working hours per project from your browser toolbar.</p>
 
 <p align="center">
+  <a href="https://chromewebstore.google.com/detail/ekipfhbeofmkoobmocbbijoflbfohlen"><img src="https://img.shields.io/badge/Chrome%20Web%20Store-Install-4285F4?logo=googlechrome&logoColor=white" alt="Install from the Chrome Web Store"></a>
+</p>
+
+<p align="center">
   <img src="docs/preview.png" width="720" alt="P-Planner popup: project list and project detail">
 </p>
 
@@ -22,6 +26,13 @@
 
 ## Install
 
+### Chrome Web Store (recommended)
+
+Install it from the [Chrome Web Store](https://chromewebstore.google.com/detail/ekipfhbeofmkoobmocbbijoflbfohlen).
+Works in Chrome, Brave and other Chromium browsers, and updates automatically.
+
+### Manual
+
 1. Download `P-Planner-vX.Y.Z.zip` from the [latest release](https://github.com/creep33/P-Planner/releases/latest) and unzip it into a permanent folder.
 2. Open `brave://extensions` (or `chrome://extensions`) and turn on **Developer mode**.
 3. Click **Load unpacked** and select the unzipped folder.
@@ -30,8 +41,8 @@ To update, unzip the new version over the same folder and click ⟳ on the exten
 
 ## Sync
 
-On each device, turn on **Settings → Sync → Extensions** and install the same zip.
-If your data does not sync, use **Export** on one device and **Import** on the other.
+On each device, turn on **Settings → Sync → Extensions** and install P-Planner the same way (store or zip).
+The store and zip versions have different IDs and do not share data; move it with **Export** and **Import**.
 
 ## Privacy
 

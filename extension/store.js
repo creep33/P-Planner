@@ -95,7 +95,7 @@ export async function loadAll() {
   for (const [k, v] of Object.entries(all)) {
     if (k.startsWith(P)) projects.push({ ...v, days: all[D + v.id] || {} });
   }
-  return projects.sort((a, b) => a.createdAt - b.createdAt);
+  return projects.sort((a, b) => b.createdAt - a.createdAt); // newest first
 }
 
 async function getProject(id) {

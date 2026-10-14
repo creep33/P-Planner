@@ -1,6 +1,6 @@
 {
   "name": "p-planner",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "private": true,
   "description": "Browser extension to track hours per project, synced across devices via Brave/Chrome Sync.",
   "type": "module",
