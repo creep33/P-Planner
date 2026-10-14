@@ -54,7 +54,7 @@ device must load this same build without changing the key.
 2. Under *Manage your synced data*, enable **Extensions**.
 3. Install the extension on each device as described above (same ID).
 
-Changes usually propagate within seconds. If sync does not work with the unpacked extension, use **Backup JSON** on
+Changes usually propagate within seconds. If sync does not work with the unpacked extension, use **Export** on
 one device and **Import** on the other.
 
 ### `storage.sync` limits
@@ -77,7 +77,7 @@ If two devices edit the same project at the same time while offline, the last wr
 | Rename | Click the name in the detail view |
 | Add / subtract time | **Manual adjustment**: sign, hours, minutes and date |
 | Delete a project | **Delete project**, then click again to confirm |
-| Backup | **Backup JSON** in the list |
+| Backup | **Export** in the list (JSON file) |
 | Restore | **Import** (opens a tab; replaces all data) |
 
 ## Data model
