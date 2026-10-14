@@ -150,24 +150,7 @@ export function onChange(cb) {
   });
 }
 
-// ---- export / import ----
-
-const csvCell = (s) => {
-  const safe = /^[=+\-@]/.test(s) ? `'${s}` : s;
-  return /[;"\n\r]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
-};
-
-export function toCSV(projects, now = Date.now()) {
-  const lines = ['Proyecto;Fecha;Minutos;Horas'];
-  for (const p of projects) {
-    const { days } = totals(p, p.days, now);
-    for (const k of Object.keys(days).sort()) {
-      const hours = (days[k] / 3600000).toFixed(2).replace('.', ',');
-      lines.push([csvCell(p.name), k, Math.round(days[k] / 60000), hours].join(';'));
-    }
-  }
-  return '﻿' + lines.join('\r\n');
-}
+// ---- backup / restore ----
 
 export function toJSON(projects) {
   return JSON.stringify(

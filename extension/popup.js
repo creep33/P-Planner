@@ -175,14 +175,8 @@ function download(name, content, type) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-const stamp = () => store.dateKey(Date.now());
-
-$('export-csv').addEventListener('click', () => {
-  download(`p-planner-${stamp()}.csv`, store.toCSV(projects), 'text/csv;charset=utf-8');
-});
-
 $('export-json').addEventListener('click', () => {
-  download(`p-planner-backup-${stamp()}.json`, store.toJSON(projects), 'application/json');
+  download(`p-planner-backup-${store.dateKey(Date.now())}.json`, store.toJSON(projects), 'application/json');
 });
 
 // The file picker steals focus and closes the popup, so import runs from a full tab.

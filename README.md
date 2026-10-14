@@ -20,7 +20,7 @@
 - **Desglose**: total, hoy, semana actual (lunes–domingo) y últimos días.
 - **Sincronización**: los datos viven en `chrome.storage.sync`; un cronómetro iniciado en un equipo se ve corriendo en el otro.
 - **Badge**: el icono muestra cuántos cronómetros están en marcha.
-- **Exportación**: CSV (compatible con Excel en español: `;` y coma decimal) y backup/restauración JSON.
+- **Backup**: exportación y restauración completa en JSON.
 - Modo claro/oscuro automático. Sin dependencias, sin servidores, sin telemetría.
 
 ## Instalación (Brave / Chrome)
@@ -77,7 +77,7 @@ Si dos equipos modifican el mismo proyecto a la vez sin conexión, prevalece la 
 | Renombrar | Click en el nombre dentro del detalle |
 | Añadir / restar tiempo | **Ajuste manual**: signo, horas, minutos y fecha |
 | Borrar proyecto | **Borrar proyecto** y pulsar otra vez para confirmar |
-| Exportar | **Exportar CSV** o **Backup JSON** en la lista |
+| Copia de seguridad | **Backup JSON** en la lista |
 | Restaurar | **Importar** (abre una pestaña; reemplaza todos los datos) |
 
 ## Modelo de datos

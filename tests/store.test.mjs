@@ -110,11 +110,6 @@ test('JSON export/import round trip replaces existing data', async () => {
   await assert.rejects(store.importData({ nope: true }));
 });
 
-test('CSV uses semicolons, decimal comma and neutralises formulas', () => {
-  const csv = store.toCSV([{ name: '=SUM(A1)', runningSince: null, days: { '2026-10-14': 1.5 * H } }]);
-  assert.equal(csv, "﻿Proyecto;Fecha;Minutos;Horas\r\n'=SUM(A1);2026-10-14;90;1,50");
-});
-
 test('formatters', () => {
   assert.equal(store.fmtShort(3 * H + 5 * 60000), '3h 05m');
   assert.equal(store.fmtClock(25 * H + 61000), '25:01:01');
