@@ -5,126 +5,126 @@
 <h1 align="center">P-Planner</h1>
 
 <p align="center">
-  Extensión de navegador para contabilizar horas de trabajo por proyecto.<br>
-  Cronómetros por proyecto, ajustes manuales y sincronización entre dispositivos con Brave/Chrome Sync.
+  Browser extension to track working hours per project.<br>
+  Per-project timers, manual adjustments and cross-device sync through Brave/Chrome Sync.
 </p>
 
 ---
 
-## Características
+## Features
 
-- **Proyectos**: crea, renombra y borra proyectos desde el popup de la barra de herramientas.
-- **Cronómetro por proyecto**: Start / Stop. Varios proyectos pueden correr a la vez.
-- **Basado en timestamps**: el tiempo sigue contando aunque cierres el popup o el navegador.
-- **Ajuste manual**: suma o resta horas/minutos en cualquier fecha para corregir olvidos.
-- **Desglose**: total, hoy, semana actual (lunes–domingo) y últimos días.
-- **Sincronización**: los datos viven en `chrome.storage.sync`; un cronómetro iniciado en un equipo se ve corriendo en el otro.
-- **Badge**: el icono muestra cuántos cronómetros están en marcha.
-- **Backup**: exportación y restauración completa en JSON.
-- Modo claro/oscuro automático. Sin dependencias, sin servidores, sin telemetría.
+- **Projects**: create, rename and delete projects from the toolbar popup.
+- **Per-project timer**: Start / Stop. Several projects can run at the same time.
+- **Timestamp based**: time keeps counting even if the popup or the browser is closed.
+- **Manual adjustment**: add or subtract hours/minutes on any date to fix forgotten time.
+- **Breakdown**: total, today, current week (Monday–Sunday) and recent days.
+- **Sync**: data lives in `chrome.storage.sync`; a timer started on one device shows as running on the other.
+- **Badge**: the toolbar icon shows how many timers are running.
+- **Backup**: full JSON export and restore.
+- Automatic light/dark mode. No dependencies, no servers, no telemetry.
 
-## Instalación (Brave / Chrome)
+## Installation (Brave / Chrome)
 
-### Desde una release (recomendado)
+### From a release (recommended)
 
-1. Descarga `P-Planner-vX.Y.zip` de la [última release](https://github.com/creep33/P-Planner/releases/latest).
-2. Descomprímelo en una carpeta permanente (no la borres: el navegador carga la extensión desde ahí).
-3. Abre `brave://extensions` (o `chrome://extensions`) y activa **Modo desarrollador**.
-4. Pulsa **Cargar descomprimida** y selecciona la carpeta descomprimida (la que contiene `manifest.json`).
-5. Fija el icono en la barra de herramientas.
+1. Download `P-Planner-vX.Y.Z.zip` from the [latest release](https://github.com/creep33/P-Planner/releases/latest).
+2. Unzip it into a permanent folder (don't delete it: the browser loads the extension from there).
+3. Open `brave://extensions` (or `chrome://extensions`) and enable **Developer mode**.
+4. Click **Load unpacked** and select the unzipped folder (the one containing `manifest.json`).
+5. Pin the icon to the toolbar.
 
-Para actualizar: descomprime la nueva versión encima de la misma carpeta y pulsa ⟳ en la tarjeta de la extensión.
-Los datos se conservan porque el ID no cambia.
+To update: unzip the new version over the same folder and click ⟳ on the extension card.
+Your data is kept because the extension ID does not change.
 
-### Desde el código
+### From source
 
-1. Clona el repositorio:
+1. Clone the repository:
    ```bash
    git clone https://github.com/creep33/P-Planner.git
    ```
-2. En `brave://extensions`, con **Modo desarrollador** activo, pulsa **Cargar descomprimida** y selecciona `extension/`.
+2. In `brave://extensions`, with **Developer mode** on, click **Load unpacked** and select `extension/`.
 
-El `manifest.json` incluye una clave pública (`key`) que fija el ID de la extensión a
-`gbdmogficigldmeiigigomjamocipnej` en todos los equipos. Es imprescindible: `storage.sync` asocia los datos al ID,
-así que cada dispositivo debe cargar esta misma carpeta sin modificar la clave.
+The `manifest.json` includes a public key (`key`) that pins the extension ID to
+`gbdmogficigldmeiigigomjamocipnej` on every device. This is required: `storage.sync` ties data to the ID, so every
+device must load this same build without changing the key.
 
-## Sincronización entre dispositivos
+## Syncing across devices
 
-1. En cada equipo: **Ajustes → Sincronización** de Brave, unirse a la misma cadena de sincronización.
-2. En *Gestionar los datos sincronizados*, activa **Extensiones**.
-3. Instala la extensión en cada equipo como se indica arriba (mismo ID).
+1. On each device, go to Brave **Settings → Sync** and join the same sync chain.
+2. Under *Manage your synced data*, enable **Extensions**.
+3. Install the extension on each device as described above (same ID).
 
-Los cambios tardan normalmente unos segundos en propagarse. Si la sincronización no llegara a funcionar con la
-extensión cargada sin empaquetar, usa **Backup JSON** en un equipo e **Importar** en el otro.
+Changes usually propagate within seconds. If sync does not work with the unpacked extension, use **Backup JSON** on
+one device and **Import** on the other.
 
-### Límites de `storage.sync`
+### `storage.sync` limits
 
-| Límite | Valor | Cómo se gestiona |
+| Limit | Value | How it is handled |
 | --- | --- | --- |
-| Total | 100 KB | Cientos de proyectos con años de historial caben de sobra |
-| Por elemento | 8 KB | El historial diario antiguo se agrupa por meses automáticamente (el total no cambia) |
-| Escrituras | 120/min, 1800/h | Solo se escribe en acciones del usuario (start, stop, ajustes) |
+| Total | 100 KB | Hundreds of projects with years of history fit comfortably |
+| Per item | 8 KB | Old daily history is folded into monthly buckets automatically (totals stay exact) |
+| Writes | 120/min, 1800/h | Writes only happen on user actions (start, stop, adjustments) |
 
-Si dos equipos modifican el mismo proyecto a la vez sin conexión, prevalece la última escritura.
+If two devices edit the same project at the same time while offline, the last write wins.
 
-## Uso
+## Usage
 
-| Acción | Cómo |
+| Action | How |
 | --- | --- |
-| Crear proyecto | Escribe el nombre y pulsa **Añadir** (o Enter) |
-| Iniciar / parar | Botón ▶ / ■ en la lista, o **Start / Stop** en el detalle |
-| Ver detalle | Click en el proyecto |
-| Renombrar | Click en el nombre dentro del detalle |
-| Añadir / restar tiempo | **Ajuste manual**: signo, horas, minutos y fecha |
-| Borrar proyecto | **Borrar proyecto** y pulsar otra vez para confirmar |
-| Copia de seguridad | **Backup JSON** en la lista |
-| Restaurar | **Importar** (abre una pestaña; reemplaza todos los datos) |
+| Create a project | Type the name and click **Add** (or press Enter) |
+| Start / stop | ▶ / ■ button in the list, or **Start / Stop** in the detail view |
+| Open details | Click the project |
+| Rename | Click the name in the detail view |
+| Add / subtract time | **Manual adjustment**: sign, hours, minutes and date |
+| Delete a project | **Delete project**, then click again to confirm |
+| Backup | **Backup JSON** in the list |
+| Restore | **Import** (opens a tab; replaces all data) |
 
-## Modelo de datos
+## Data model
 
-Una clave por proyecto en `chrome.storage.sync` para minimizar conflictos entre dispositivos:
+One key per project in `chrome.storage.sync` to minimise conflicts between devices:
 
 ```text
-p:<id>  →  { id, name, createdAt, runningSince }      proyecto y estado del cronómetro
-d:<id>  →  { "2026-10-14": ms, "2025-03": ms, ... }   tiempo cerrado por día (o por mes tras compactar)
+p:<id>  →  { id, name, createdAt, runningSince }      project and timer state
+d:<id>  →  { "2026-10-14": ms, "2025-03": ms, ... }   closed time per day (or per month after compaction)
 ```
 
-Al parar un cronómetro, la sesión se reparte entre días locales si cruza la medianoche.
+When a timer is stopped, a session that crosses midnight is split across local days.
 
-## Desarrollo
+## Development
 
-Requiere Node.js ≥ 22.2 solo para tests y para regenerar iconos; la extensión no tiene paso de build.
+Node.js ≥ 22.2 is only needed for tests and to regenerate icons; the extension has no build step.
 
 ```bash
-npm test         # tests de la lógica de tiempo y almacenamiento (node:test)
-npm run icons    # regenera extension/icons/*.png
+npm test         # time and storage logic tests (node:test)
+npm run icons    # regenerates extension/icons/*.png
 ```
 
 ```text
 extension/
   manifest.json   Manifest V3
-  store.js        Almacenamiento + lógica de tiempo (compartido)
+  store.js        Storage + time logic (shared)
   popup.html/css/js
-  background.js   Badge del icono
+  background.js   Toolbar badge
   icons/
 scripts/
-  make-icons.mjs  Genera los iconos PNG sin dependencias
+  make-icons.mjs  Generates the PNG icons with no dependencies
 tests/
   store.test.mjs
 ```
 
-Tras editar archivos, pulsa ⟳ en la tarjeta de la extensión en `brave://extensions`.
+After editing files, click ⟳ on the extension card in `brave://extensions`.
 
-### Publicar una versión
+### Publishing a version
 
-Crea una release en GitHub con un tag tipo `v1.0` o `v1.0.1`. El workflow
-[`release.yml`](.github/workflows/release.yml) ejecuta los tests, pone la versión del tag en `manifest.json`,
-empaqueta `extension/` en `P-Planner-vX.Y.zip` (con su `.sha256`) y lo adjunta a la release.
+Create a GitHub release with a tag like `v1.0` or `v1.0.1`. The
+[`release.yml`](.github/workflows/release.yml) workflow runs the tests, stamps the tag version into `manifest.json`,
+packages `extension/` as `P-Planner-vX.Y.Z.zip` (plus a `.sha256`) and attaches it to the release.
 
 ```bash
-gh release create v1.0 --generate-notes
+gh release create v1.0.0 --generate-notes
 ```
 
-## Licencia
+## License
 
 [MIT](LICENSE)

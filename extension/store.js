@@ -100,7 +100,7 @@ export async function loadAll() {
 
 async function getProject(id) {
   const res = await area().get([P + id, D + id]);
-  if (!res[P + id]) throw new Error('El proyecto ya no existe');
+  if (!res[P + id]) throw new Error('Project no longer exists');
   return { project: res[P + id], days: res[D + id] || {} };
 }
 
@@ -167,17 +167,17 @@ export function toJSON(projects) {
 
 // Replaces all current data with the backup's contents.
 export async function importData(data) {
-  if (!data || !Array.isArray(data.projects)) throw new Error('Archivo no válido');
+  if (!data || !Array.isArray(data.projects)) throw new Error('Invalid file');
   const items = {};
   for (const p of data.projects) {
-    if (typeof p.id !== 'string' || !p.id || typeof p.name !== 'string') throw new Error('Proyecto no válido en el archivo');
+    if (typeof p.id !== 'string' || !p.id || typeof p.name !== 'string') throw new Error('Invalid project in file');
     const days = {};
     for (const [k, v] of Object.entries(p.days || {})) {
       if (/^\d{4}-\d{2}(-\d{2})?$/.test(k) && Number.isFinite(v) && v > 0) days[k] = Math.round(v);
     }
     items[P + p.id] = {
       id: p.id,
-      name: p.name.trim().slice(0, 60) || 'Sin nombre',
+      name: p.name.trim().slice(0, 60) || 'Untitled',
       createdAt: Number.isFinite(p.createdAt) ? p.createdAt : Date.now(),
       runningSince: Number.isFinite(p.runningSince) ? p.runningSince : null,
     };

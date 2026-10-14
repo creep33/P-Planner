@@ -33,7 +33,7 @@ async function run(fn) {
   } catch (err) {
     console.error(err);
     const quota = /quota/i.test(err?.message || '');
-    toast(quota ? 'Límite de sincronización alcanzado, espera un momento' : err?.message || 'Error', true);
+    toast(quota ? 'Sync limit reached, wait a moment' : err?.message || 'Error', true);
   }
 }
 
@@ -65,7 +65,7 @@ function renderList() {
       const play = el('button', {
         className: 'play',
         type: 'button',
-        title: p.runningSince ? 'Parar' : 'Empezar',
+        title: p.runningSince ? 'Stop' : 'Start',
         innerHTML: p.runningSince ? ICON_STOP : ICON_PLAY,
       });
       play.dataset.act = 'toggle';
@@ -82,7 +82,7 @@ function renderList() {
   );
   const running = projects.filter((p) => p.runningSince).length;
   $('running-pill').hidden = !running;
-  $('running-pill').textContent = `${running} en marcha`;
+  $('running-pill').textContent = `${running} running`;
 }
 
 function renderDetail() {
@@ -92,17 +92,17 @@ function renderDetail() {
   const h1 = $('d-name'); // null while the rename input is open
   if (h1) {
     h1.textContent = p.name;
-    h1.title = `${p.name} · click para renombrar`;
+    h1.title = `${p.name} · click to rename`;
   }
 }
 
 function dayLabel(key) {
   if (key.length === 7) {
     const [y, m] = key.split('-').map(Number);
-    return new Date(y, m - 1, 1).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   }
   const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 // Only touches text so clicks and inputs are never disturbed by the 1s tick.
@@ -114,7 +114,7 @@ function updateTimes() {
       if (!p) continue;
       const t = store.totals(p, p.days, now);
       li.querySelector('.total').textContent = store.fmtShort(t.total);
-      li.querySelector('.sub').textContent = `Hoy ${store.fmtShort(t.today)}`;
+      li.querySelector('.sub').textContent = `Today ${store.fmtShort(t.today)}`;
     }
     return;
   }
@@ -127,7 +127,7 @@ function updateTimes() {
   $('d-days').replaceChildren(
     ...(keys.length
       ? keys.map((k) => el('li', {}, el('span', { textContent: dayLabel(k) }), el('strong', { textContent: store.fmtShort(t.days[k]) })))
-      : [el('li', {}, el('span', { className: 'muted', textContent: 'Sin tiempo registrado' }))]),
+      : [el('li', {}, el('span', { className: 'muted', textContent: 'No time logged' }))]),
   );
 }
 
@@ -189,11 +189,11 @@ $('import-file').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   e.target.value = '';
   if (!file) return;
-  if (!confirm('Importar reemplaza TODOS los proyectos actuales por los del archivo. ¿Continuar?')) return;
+  if (!confirm('Import replaces ALL current projects with the ones in the file. Continue?')) return;
   await run(async () => {
     await store.importData(JSON.parse(await file.text()));
     await refresh();
-    toast('Backup importado');
+    toast('Backup imported');
   });
 });
 
@@ -248,14 +248,14 @@ $('manual-form').addEventListener('submit', (e) => {
   const m = Math.max(0, Number($('m-m').value) || 0);
   const sign = Number($('m-sign').value);
   const ms = (h * 60 + m) * 60000 * sign;
-  if (!ms) return toast('Indica horas o minutos', true);
+  if (!ms) return toast('Enter hours or minutes', true);
   const date = $('m-date').value || store.dateKey(Date.now());
   run(async () => {
     await store.addManual(currentId, ms, date);
     $('m-h').value = '';
     $('m-m').value = '';
     await refresh();
-    toast(`${sign > 0 ? 'Añadido' : 'Restado'} ${store.fmtShort(Math.abs(ms))} el ${dayLabel(date)}`);
+    toast(`${sign > 0 ? 'Added' : 'Subtracted'} ${store.fmtShort(Math.abs(ms))} on ${dayLabel(date)}`);
   });
 });
 
@@ -281,7 +281,7 @@ function confirmClick(btn, armedLabel, action) {
   });
 }
 
-confirmClick($('d-delete'), '¿Seguro? Pulsa otra vez', () =>
+confirmClick($('d-delete'), 'Sure? Click again', () =>
   run(async () => {
     await store.deleteProject(currentId);
     currentId = null;

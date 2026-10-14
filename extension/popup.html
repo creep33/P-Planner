@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>P-Planner</title>
@@ -12,50 +12,50 @@
       <span id="running-pill" class="pill" hidden></span>
     </header>
     <form id="new-form" class="row">
-      <input id="new-name" placeholder="Nuevo proyecto" maxlength="60" autocomplete="off" required>
-      <button type="submit">Añadir</button>
+      <input id="new-name" placeholder="New project" maxlength="60" autocomplete="off" required>
+      <button type="submit">Add</button>
     </form>
     <ul id="projects"></ul>
-    <p id="empty" class="empty" hidden>Sin proyectos todavía. Crea uno arriba.</p>
+    <p id="empty" class="empty" hidden>No projects yet. Create one above.</p>
     <footer class="foot">
       <button id="export-json" class="link" type="button">Backup JSON</button>
-      <button id="import-json" class="link" type="button">Importar</button>
+      <button id="import-json" class="link" type="button">Import</button>
       <input id="import-file" type="file" accept=".json,application/json" hidden>
     </footer>
   </section>
 
   <section id="detail-view" hidden>
     <header class="bar">
-      <button id="back" class="icon" type="button" title="Volver" aria-label="Volver">
+      <button id="back" class="icon" type="button" title="Back" aria-label="Back">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <h1 id="d-name" class="editable" title="Click para renombrar"></h1>
+      <h1 id="d-name" class="editable" title="Click to rename"></h1>
     </header>
 
     <div id="d-clock" class="clock">00:00:00</div>
     <button id="d-toggle" class="big" type="button">Start</button>
 
     <div class="stats">
-      <div><span>Hoy</span><strong id="d-today">0h 00m</strong></div>
-      <div><span>Esta semana</span><strong id="d-week">0h 00m</strong></div>
+      <div><span>Today</span><strong id="d-today">0h 00m</strong></div>
+      <div><span>This week</span><strong id="d-week">0h 00m</strong></div>
     </div>
 
-    <h2>Ajuste manual</h2>
+    <h2>Manual adjustment</h2>
     <form id="manual-form" class="manual">
-      <select id="m-sign" aria-label="Sumar o restar">
+      <select id="m-sign" aria-label="Add or subtract">
         <option value="1">+</option>
         <option value="-1">−</option>
       </select>
-      <input id="m-h" type="number" min="0" max="999" placeholder="h" aria-label="Horas">
-      <input id="m-m" type="number" min="0" max="59" placeholder="min" aria-label="Minutos">
-      <input id="m-date" type="date" aria-label="Fecha">
-      <button type="submit">Aplicar ajuste</button>
+      <input id="m-h" type="number" min="0" max="999" placeholder="h" aria-label="Hours">
+      <input id="m-m" type="number" min="0" max="59" placeholder="min" aria-label="Minutes">
+      <input id="m-date" type="date" aria-label="Date">
+      <button type="submit">Apply adjustment</button>
     </form>
 
-    <h2>Últimos días</h2>
+    <h2>Recent days</h2>
     <ul id="d-days" class="days"></ul>
 
-    <button id="d-delete" class="link danger" type="button">Borrar proyecto</button>
+    <button id="d-delete" class="link danger" type="button">Delete project</button>
   </section>
 
   <div id="toast" role="status" hidden></div>

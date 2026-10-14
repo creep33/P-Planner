@@ -7,7 +7,7 @@ async function updateBadge() {
   if (chrome.action.setBadgeTextColor) await chrome.action.setBadgeTextColor({ color: '#ffffff' });
   await chrome.action.setBadgeText({ text: running.length ? String(running.length) : '' });
   await chrome.action.setTitle({
-    title: running.length ? `P-Planner · en marcha: ${running.map((p) => p.name).join(', ')}` : 'P-Planner',
+    title: running.length ? `P-Planner · running: ${running.map((p) => p.name).join(', ')}` : 'P-Planner',
   });
 }
 
