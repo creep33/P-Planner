@@ -25,13 +25,24 @@
 
 ## Instalación (Brave / Chrome)
 
+### Desde una release (recomendado)
+
+1. Descarga `P-Planner-vX.Y.zip` de la [última release](https://github.com/creep33/P-Planner/releases/latest).
+2. Descomprímelo en una carpeta permanente (no la borres: el navegador carga la extensión desde ahí).
+3. Abre `brave://extensions` (o `chrome://extensions`) y activa **Modo desarrollador**.
+4. Pulsa **Cargar descomprimida** y selecciona la carpeta descomprimida (la que contiene `manifest.json`).
+5. Fija el icono en la barra de herramientas.
+
+Para actualizar: descomprime la nueva versión encima de la misma carpeta y pulsa ⟳ en la tarjeta de la extensión.
+Los datos se conservan porque el ID no cambia.
+
+### Desde el código
+
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/creep33/P-Planner.git
    ```
-2. Abre `brave://extensions` (o `chrome://extensions`) y activa **Modo desarrollador**.
-3. Pulsa **Cargar descomprimida** y selecciona la carpeta `extension/`.
-4. Fija el icono en la barra de herramientas.
+2. En `brave://extensions`, con **Modo desarrollador** activo, pulsa **Cargar descomprimida** y selecciona `extension/`.
 
 El `manifest.json` incluye una clave pública (`key`) que fija el ID de la extensión a
 `gbdmogficigldmeiigigomjamocipnej` en todos los equipos. Es imprescindible: `storage.sync` asocia los datos al ID,
@@ -103,6 +114,16 @@ tests/
 ```
 
 Tras editar archivos, pulsa ⟳ en la tarjeta de la extensión en `brave://extensions`.
+
+### Publicar una versión
+
+Crea una release en GitHub con un tag tipo `v1.0` o `v1.0.1`. El workflow
+[`release.yml`](.github/workflows/release.yml) ejecuta los tests, pone la versión del tag en `manifest.json`,
+empaqueta `extension/` en `P-Planner-vX.Y.zip` (con su `.sha256`) y lo adjunta a la release.
+
+```bash
+gh release create v1.0 --generate-notes
+```
 
 ## Licencia
 

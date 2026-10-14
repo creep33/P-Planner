@@ -1,0 +1,56 @@
+name: Release
+
+# Builds an installable zip of the extension and attaches it to every published release.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test
+        run: npm test
+
+      - name: Stamp manifest version from tag
+        id: version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          VERSION="${TAG#v}"
+          if ! [[ "$VERSION" =~ ^[0-9]+(\.[0-9]+){0,3}$ ]]; then
+            echo "::error::Tag '$TAG' must look like v1.2 or v1.2.3"
+            exit 1
+          fi
+          node -e '
+            const fs = require("fs");
+            const file = "extension/manifest.json";
+            const manifest = JSON.parse(fs.readFileSync(file, "utf8"));
+            manifest.version = process.argv[1];
+            fs.writeFileSync(file, JSON.stringify(manifest, null, 2) + "\n");
+          ' "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build zip
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p dist
+          (cd extension && zip -r -X "../dist/P-Planner-v${VERSION}.zip" . -x '.*')
+          (cd dist && sha256sum "P-Planner-v${VERSION}.zip" > "P-Planner-v${VERSION}.zip.sha256")
+          unzip -l "dist/P-Planner-v${VERSION}.zip"
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" dist/* --clobber
