@@ -1,11 +1,13 @@
-// Renders the stopwatch toolbar icon to extension/icons/*.png with no dependencies.
+// Renders the stopwatch icon to extension/icons/*.png and the padded Web Store icon, with no dependencies.
 // Usage: node scripts/make-icons.mjs
 import { deflateSync, crc32 } from 'node:zlib';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'extension', 'icons');
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const OUT = join(ROOT, 'extension', 'icons');
+const STORE_OUT = join(ROOT, 'store', 'assets');
 const ACCENT = [79, 70, 229];
 const WHITE = [255, 255, 255];
 const SIZES = [16, 32, 48, 128];
@@ -34,16 +36,19 @@ function shade(x, y) {
   return c;
 }
 
-function render(size) {
+// pad: transparent margin in output pixels (Web Store wants 96px artwork inside 128px).
+function render(size, pad = 0) {
   const px = Buffer.alloc(size * size * 4);
-  const scale = 128 / size;
+  const scale = 128 / (size - 2 * pad);
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       let n = 0;
       const sum = [0, 0, 0];
       for (let sy = 0; sy < SS; sy++) {
         for (let sx = 0; sx < SS; sx++) {
-          const c = shade((x + (sx + 0.5) / SS) * scale, (y + (sy + 0.5) / SS) * scale);
+          const dx = (x - pad + (sx + 0.5) / SS) * scale;
+          const dy = (y - pad + (sy + 0.5) / SS) * scale;
+          const c = dx < 0 || dy < 0 || dx > 128 || dy > 128 ? null : shade(dx, dy);
           if (!c) continue;
           n++;
           for (let i = 0; i < 3; i++) sum[i] += c[i];
@@ -86,3 +91,7 @@ for (const size of SIZES) {
   writeFileSync(join(OUT, `icon${size}.png`), png(size, render(size)));
   console.log(`icon${size}.png`);
 }
+
+mkdirSync(STORE_OUT, { recursive: true });
+writeFileSync(join(STORE_OUT, 'store-icon-128.png'), png(128, render(128, 16)));
+console.log('store-icon-128.png');

@@ -1,12 +1,13 @@
 {
   "name": "p-planner",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "private": true,
   "description": "Browser extension to track hours per project, synced across devices via Brave/Chrome Sync.",
   "type": "module",
   "scripts": {
     "test": "node --test \"tests/*.test.mjs\"",
-    "icons": "node scripts/make-icons.mjs"
+    "icons": "node scripts/make-icons.mjs",
+    "store-assets": "node scripts/make-store-assets.mjs"
   },
   "engines": {
     "node": ">=22.2"

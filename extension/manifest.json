@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "P-Planner",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Per-project hour tracker with manual adjustments, synced across devices via Brave/Chrome Sync.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0cQIsX6+k1UZUv3aZNg7qfIPz3Vpxi8MbCg4/3GebnIUeFztbunoEFCO7Yy9JX+NPO94CAkN+udk/fgNzp51PWFvHK8OlPAOpHN9x2twbNBB25KOIu7nZ93fhuCm2Ht3X35KYg03V4CN2AB5ABH3oFkQfs7VrSEzBMwRcsS8iYPip9Axf6iDMxWMG/MoXpE+gzt24e0eyvTSLsHaCSjEaxQwldUuiPixumGBlu0Xu7NE3KjsDg+Q6K51bGf8zcHIzosRGjTmInb3nD2HslNVAagAO6oh2B54bugrmm8P/9cpZXb7zFPQDLxWKlTWqvXsV6RO+gubzjTHMkWDMfV83QIDAQAB",
   "permissions": ["storage"],

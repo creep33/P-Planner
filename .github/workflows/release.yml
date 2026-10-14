@@ -40,14 +40,26 @@ jobs:
           ' "$VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      - name: Build zip
+      - name: Build zips
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           mkdir -p dist
+          # Load-unpacked build: keeps the manifest key so every device gets the same extension ID.
           (cd extension && zip -r -X "../dist/P-Planner-v${VERSION}.zip" . -x '.*')
-          (cd dist && sha256sum "P-Planner-v${VERSION}.zip" > "P-Planner-v${VERSION}.zip.sha256")
-          unzip -l "dist/P-Planner-v${VERSION}.zip"
+          # Chrome Web Store build: the store rejects manifests with a key and assigns its own ID.
+          cp -r extension build-webstore
+          node -e '
+            const fs = require("fs");
+            const file = "build-webstore/manifest.json";
+            const manifest = JSON.parse(fs.readFileSync(file, "utf8"));
+            delete manifest.key;
+            fs.writeFileSync(file, JSON.stringify(manifest, null, 2) + "\n");
+          '
+          (cd build-webstore && zip -r -X "../dist/P-Planner-v${VERSION}-webstore.zip" . -x '.*')
+          cd dist
+          for f in *.zip; do sha256sum "$f" > "$f.sha256"; done
+          for f in *.zip; do unzip -l "$f"; done
 
       - name: Upload to release
         env:
