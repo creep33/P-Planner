@@ -13,6 +13,7 @@ let projects = [];
 let folders = [];
 let currentFolder = null; // folder shown in the list view, null = root
 let currentId = null; // project shown in the detail view
+let settingsOpen = false; // folder settings panel
 let ticker = null;
 
 function el(tag, props = {}, ...children) {
@@ -59,6 +60,7 @@ function saveLocation() {
 function openFolder(id) {
   currentFolder = id;
   currentId = null;
+  settingsOpen = false;
   saveLocation();
   render();
 }
@@ -104,9 +106,14 @@ function renderList() {
     title.title = folder ? `${store.folderPath(folders, folder.id)} · click to rename` : '';
   }
   $('folder-info').hidden = !folder;
+  $('f-settings-btn').hidden = !folder;
+  $('f-settings-btn').classList.toggle('active', settingsOpen);
+  $('f-settings-btn').setAttribute('aria-expanded', String(settingsOpen));
+  $('f-settings').hidden = !folder || !settingsOpen;
   if (folder) {
     fillFolderSelect($('f-parent'), folder.parentId, { exclude: store.descendantFolderIds(folders, folder.id), none: 'Top level' });
   }
+  $('new-form').hidden = !!folder; // projects and folders are only created at the top level
   $('root-foot').hidden = !!folder;
   $('folder-foot').hidden = !folder;
 
@@ -115,7 +122,9 @@ function renderList() {
   $('running-pill').textContent = `${running} running`;
 
   $('empty').hidden = subFolders.length + here.length > 0;
-  $('empty').textContent = folder ? 'Empty folder.' : 'No projects yet. Create one above.';
+  $('empty').textContent = folder
+    ? 'Empty folder. Move projects here from their detail view.'
+    : 'No projects yet. Create one above.';
 
   const folderRows = subFolders.map((f) => {
     const t = store.folderTotals(f.id, projects, folders);
@@ -287,7 +296,7 @@ $('new-form').addEventListener('submit', (e) => {
   const name = newName();
   if (!name) return;
   run(async () => {
-    await store.createProject(name, currentFolder);
+    await store.createProject(name);
     $('new-name').value = '';
     await refresh();
   });
@@ -297,7 +306,7 @@ $('new-folder').addEventListener('click', () => {
   const name = newName();
   if (!name) return;
   run(async () => {
-    await store.createFolder(name, currentFolder);
+    await store.createFolder(name);
     $('new-name').value = '';
     await refresh();
   });
@@ -327,11 +336,19 @@ $('l-title').addEventListener('click', () => {
   inlineRename($('l-title'), (name) => store.renameFolder(id, name));
 });
 
+$('f-settings-btn').addEventListener('click', () => {
+  settingsOpen = !settingsOpen;
+  render();
+});
+
 $('f-parent').addEventListener('change', (e) => {
   const id = currentFolder;
+  const parent = e.target.value || null;
   run(async () => {
-    await store.moveFolder(id, e.target.value || null);
+    await store.moveFolder(id, parent);
+    settingsOpen = false;
     await refresh();
+    toast(`Moved to ${parent ? store.folderPath(folders, parent) : 'top level'}`);
   });
 });
 

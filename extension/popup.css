@@ -161,8 +161,9 @@ button.secondary:hover { border-color: var(--accent); color: var(--accent); }
 #folder-info .stats { margin-top: 0; }
 .stats.three { grid-template-columns: repeat(3, 1fr); }
 
-.move { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: var(--muted); }
-.move select { flex: 1; padding: 4px 6px; font-size: 12px; color: var(--fg); }
+button.icon.active { background: var(--card); color: var(--accent); }
+.settings h2 { margin-top: 12px; }
+select.full { width: 100%; }
 
 .empty { margin: 28px 0; text-align: center; color: var(--muted); }
 
