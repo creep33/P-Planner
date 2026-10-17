@@ -29,14 +29,18 @@ const MOCK = `
 const H = 3600000, M = 60000, DAY = 86400000, now = Date.now();
 const dk = (t) => { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 let data = {
-  'p:a1': { id: 'a1', name: 'Website redesign', createdAt: 4, runningSince: now - (1 * H + 12 * M) },
+  'f:cl': { id: 'cl', name: 'Clients', createdAt: 2, parentId: null },
+  'f:pe': { id: 'pe', name: 'Personal', createdAt: 1, parentId: null },
+  'p:a1': { id: 'a1', name: 'Website redesign', createdAt: 4, runningSince: now - (1 * H + 12 * M), folderId: 'cl' },
   'd:a1': { [dk(now)]: 2 * H, [dk(now - DAY)]: 6.5 * H, [dk(now - 2 * DAY)]: 4 * H, [dk(now - 3 * DAY)]: 5.25 * H, [dk(now - 6 * DAY)]: 3 * H },
-  'p:b2': { id: 'b2', name: 'Mobile app', createdAt: 3, runningSince: null },
+  'p:b2': { id: 'b2', name: 'Mobile app', createdAt: 3, runningSince: null, folderId: 'cl' },
   'd:b2': { [dk(now)]: 1.5 * H, [dk(now - DAY)]: 2 * H, [dk(now - 4 * DAY)]: 7 * H },
-  'p:c3': { id: 'c3', name: 'Client support', createdAt: 2, runningSince: now - 25 * M },
+  'p:c3': { id: 'c3', name: 'Team meetings', createdAt: 2, runningSince: now - 25 * M, folderId: null },
   'd:c3': { [dk(now)]: 0.75 * H, [dk(now - 2 * DAY)]: 3 * H },
-  'p:d4': { id: 'd4', name: 'Research', createdAt: 1, runningSince: null },
+  'p:d4': { id: 'd4', name: 'Research', createdAt: 1, runningSince: null, folderId: 'pe' },
   'd:d4': { [dk(now - 3 * DAY)]: 2 * H },
+  'p:e5': { id: 'e5', name: 'Admin', createdAt: 1, runningSince: null, folderId: null },
+  'd:e5': { [dk(now)]: 0.5 * H, [dk(now - DAY)]: 1 * H },
 };
 const listeners = [];
 window.chrome = {
@@ -46,6 +50,7 @@ window.chrome = {
       async set(items) { Object.assign(data, structuredClone(items)); listeners.forEach((cb) => cb(items, 'sync')); },
       async remove(keys) { [].concat(keys).forEach((k) => delete data[k]); },
     },
+    local: { async get() { return {}; }, async set() {} },
     onChanged: { addListener: (cb) => listeners.push(cb) },
   },
   tabs: { create() {} },
@@ -57,11 +62,17 @@ const exportsList = [...storeSrc.matchAll(/export (?:async )?function (\w+)/g)].
 const storeIIFE = `const store = (() => {\n${storeSrc.replace(/^export /gm, '')}\nreturn { ${exportsList.join(', ')} };\n})();`;
 const popupSrc = read('popup.js').replace(/^import .*$/m, '');
 
+// view: 'list' (root), 'folder:<id>' or a project id (detail view).
 function popupDoc({ view = 'list', dark = false }) {
   const css =
     read('popup.css').replace('@media (prefers-color-scheme: dark) {', dark ? '@media all {' : '@media not all {') +
     `:root { color-scheme: ${dark ? 'dark' : 'light'}; }`;
-  const open = view === 'list' ? '' : `setTimeout(() => openDetail(${JSON.stringify(view)}), 50);`;
+  const open =
+    view === 'list'
+      ? ''
+      : view.startsWith('folder:')
+        ? `setTimeout(() => openFolder(${JSON.stringify(view.slice(7))}), 50);`
+        : `setTimeout(() => openDetail(${JSON.stringify(view)}), 50);`;
   return read('popup.html')
     .replace('<link rel="stylesheet" href="popup.css">', `<style>${css}</style>`)
     .replace('<script type="module" src="popup.js"></script>', `<script>${MOCK}\n${storeIIFE}\n${popupSrc}\n${open}</script>`);
@@ -116,12 +127,12 @@ const TARGETS = [
   {
     out: 'store/assets/screenshot-1-projects.png',
     size: [1280, 800],
-    html: page(1280, 800, copy('Track hours per project', 'Start and stop timers from your toolbar. Run several at once.') + popup({ view: 'list' }, 1.55)),
+    html: page(1280, 800, copy('Track hours per project', 'Start and stop timers from your toolbar. Group projects in folders.') + popup({ view: 'list' }, 1.55)),
   },
   {
     out: 'store/assets/screenshot-2-detail.png',
     size: [1280, 800],
-    html: page(1280, 800, copy('Fix time by hand', 'Add or subtract time on any date. See today, this week and recent days.') + popup({ view: 'a1' }, 1.2)),
+    html: page(1280, 800, copy('Fix time by hand', 'Add or subtract time on any date. See today, this week and recent days.') + popup({ view: 'a1' }, 1.12)),
   },
   {
     out: 'store/assets/screenshot-3-sync.png',
@@ -130,7 +141,7 @@ const TARGETS = [
       1280,
       800,
       copy('Synced across your devices', 'Stored in your browser’s sync storage. No accounts, no servers. Light and dark mode.') +
-        `<div class="row">${popup({ view: 'list', dark: true }, 1.05)}${popup({ view: 'a1', dark: true }, 1.05)}</div>`,
+        `<div class="row">${popup({ view: 'folder:cl', dark: true }, 1.05)}${popup({ view: 'a1', dark: true }, 1.05)}</div>`,
       '.copy { width: 340px; } .copy h1 { font-size: 40px; } body { gap: 44px; }',
     ),
   },
@@ -165,9 +176,9 @@ const TARGETS = [
   },
   {
     out: 'docs/preview.png',
-    size: [820, 700],
+    size: [820, 720],
     scale: 2,
-    html: page(820, 700, `<div class="row">${popup({ view: 'list' }, 1)}${popup({ view: 'a1' }, 1)}</div>`, 'body { background: #eef0f5; } .row { gap: 40px; }'),
+    html: page(820, 720, `<div class="row">${popup({ view: 'list' }, 1)}${popup({ view: 'a1' }, 1)}</div>`, 'body { background: #eef0f5; } .row { gap: 40px; }'),
   },
 ];
 

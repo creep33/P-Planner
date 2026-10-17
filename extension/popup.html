@@ -8,19 +8,38 @@
 <body>
   <section id="list-view">
     <header class="bar">
-      <h1>P-Planner</h1>
+      <button id="up" class="icon" type="button" title="Back" aria-label="Back" hidden>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 id="l-title">P-Planner</h1>
       <span id="running-pill" class="pill" hidden></span>
     </header>
+
+    <div id="folder-info" hidden>
+      <div class="stats three">
+        <div><span>Total</span><strong id="f-total">0h 00m</strong></div>
+        <div><span>Today</span><strong id="f-today">0h 00m</strong></div>
+        <div><span>This week</span><strong id="f-week">0h 00m</strong></div>
+      </div>
+      <label class="move">Inside <select id="f-parent"></select></label>
+    </div>
+
     <form id="new-form" class="row">
-      <input id="new-name" placeholder="New project" maxlength="60" autocomplete="off" required>
+      <input id="new-name" placeholder="New project or folder" maxlength="60" autocomplete="off">
       <button type="submit">Add</button>
+      <button id="new-folder" class="secondary" type="button" title="New folder" aria-label="New folder">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2h9A1.5 1.5 0 0 1 21 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 17.5z"/><path d="M12 11v5M9.5 13.5h5"/></svg>
+      </button>
     </form>
     <ul id="projects"></ul>
-    <p id="empty" class="empty" hidden>No projects yet. Create one above.</p>
-    <footer class="foot">
+    <p id="empty" class="empty" hidden></p>
+    <footer id="root-foot" class="foot">
       <button id="export-json" class="link" type="button">Export</button>
       <button id="import-json" class="link" type="button">Import</button>
       <input id="import-file" type="file" accept=".json,application/json" hidden>
+    </footer>
+    <footer id="folder-foot" class="foot" hidden>
+      <button id="f-delete" class="link danger" type="button">Delete folder</button>
     </footer>
   </section>
 
@@ -39,6 +58,7 @@
       <div><span>Today</span><strong id="d-today">0h 00m</strong></div>
       <div><span>This week</span><strong id="d-week">0h 00m</strong></div>
     </div>
+    <label class="move">Folder <select id="d-folder"></select></label>
 
     <h2>Manual adjustment</h2>
     <form id="manual-form" class="manual">

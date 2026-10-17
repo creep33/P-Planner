@@ -2,7 +2,7 @@
 import { loadAll, onChange } from './store.js';
 
 async function updateBadge() {
-  const running = (await loadAll()).filter((p) => p.runningSince);
+  const running = (await loadAll()).projects.filter((p) => p.runningSince);
   await chrome.action.setBadgeBackgroundColor({ color: '#16a34a' });
   if (chrome.action.setBadgeTextColor) await chrome.action.setBadgeTextColor({ color: '#ffffff' });
   await chrome.action.setBadgeText({ text: running.length ? String(running.length) : '' });

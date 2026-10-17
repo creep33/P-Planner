@@ -29,6 +29,7 @@ P-Planner is a simple time tracker for the projects you work on, right in your t
 
 • Create projects and start or stop a timer for each one
 • Run several timers at once
+• Organize projects in nested folders, with totals per folder
 • Timers keep counting even when the popup or the browser is closed
 • Add or subtract time manually on any date to fix forgotten hours
 • See the total, today, this week and recent days for every project

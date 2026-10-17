@@ -17,6 +17,7 @@
 ## Features
 
 - Start/stop timer per project, several at once
+- Nested folders with per-folder totals
 - Keeps counting with the popup or browser closed
 - Add or subtract time manually on any date
 - Today, this week and per-day totals
